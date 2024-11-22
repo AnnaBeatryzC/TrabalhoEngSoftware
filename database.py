@@ -49,6 +49,17 @@ def initialize_db():
         )
     ''')
 
+    # Criação da tabela de movimentações
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS movimentacoes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            data_movimentacao TEXT,
+            codigo_componente TEXT,
+            tipo_movimentacao TEXT,
+            quantidade INTEGER
+        )
+    ''')
+
     conn.commit()
     conn.close()
 

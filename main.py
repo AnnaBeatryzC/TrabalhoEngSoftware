@@ -7,6 +7,8 @@ from cadastro_fornecedores import cadastro_fornecedores
 from login import SistemaLogin
 from utils import criar_usuario
 from cadastro_usuarios import cadastro_usuarios
+from relatorios import relatorios
+from alterar_componente import alterar_componente
 
 # Classe principal do sistema
 class App(tk.Tk):
@@ -46,7 +48,15 @@ class App(tk.Tk):
                                      command=lambda: cadastro_componentes(self.content_frame))
             btn_cadastro.pack(pady=5)
 
-        # Funcionarios e acima
+            btn_alterar_componente = tk.Button(self.menu_frame, text="Alterar Componente", width=25,
+                                               command=lambda: alterar_componente(self.content_frame))
+            btn_alterar_componente.pack(pady=5)
+
+            btn_relatorios = tk.Button(self.menu_frame, text="Relatórios", width=25,
+                                    command=lambda: relatorios(self.content_frame))
+            btn_relatorios.pack(pady=5)
+
+        # Funcionarios  e acima
         if self.nivel_acesso in [1, 2, 3]:
 
             btn_estoque = tk.Button(self.menu_frame, text="Controle de Estoque", width=25,
@@ -56,6 +66,7 @@ class App(tk.Tk):
             btn_consulta = tk.Button(self.menu_frame, text="Consulta de Estoque", width=25,
                                      command=lambda: consulta_estoque(self.content_frame))
             btn_consulta.pack(pady=5)
+
 
 if __name__ == "__main__":
     #app = App()

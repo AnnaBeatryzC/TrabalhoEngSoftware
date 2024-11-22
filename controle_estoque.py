@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk, messagebox
 import sqlite3
 
 # Função para atualizar a quantidade no estoque
@@ -54,8 +54,19 @@ def controle_estoque(content_frame):
     frame_codigo.pack(pady=5)
     lbl_codigo = tk.Label(frame_codigo, text="Código do Componente:", width=20, anchor='w')
     lbl_codigo.pack(side=tk.LEFT)
-    entry_codigo = tk.Entry(frame_codigo, width=40)
-    entry_codigo.pack(side=tk.LEFT)
+
+    # Combobox para selecionar o código do componente
+    codigo_var = tk.StringVar()
+    codigo_combo = ttk.Combobox(frame_codigo, textvariable=codigo_var, width=40, state="readonly")
+    codigo_combo.pack(side=tk.LEFT)
+
+    # Preenchendo os códigos dos componentes cadastrados
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT codigo FROM componentes")
+    codigos = [row[0] for row in cursor.fetchall()]
+    conn.close()
+    codigo_combo["values"] = codigos
 
     frame_quantidade = tk.Frame(content_frame)
     frame_quantidade.pack(pady=5)
@@ -66,20 +77,22 @@ def controle_estoque(content_frame):
 
     # Função de atualização de estoque
     def registrar_entrada():
-        codigo = entry_codigo.get()
+        codigo = codigo_var.get()
         try:
             quantidade = int(entry_quantidade.get())
             if update_stock(codigo, quantidade, "entrada"):
                 messagebox.showinfo("Sucesso", "Entrada registrada com sucesso!")
+                entry_quantidade.delete(0, tk.END)
         except ValueError:
             messagebox.showerror("Erro", "Quantidade deve ser um número inteiro!")
 
     def registrar_saida():
-        codigo = entry_codigo.get()
+        codigo = codigo_var.get()
         try:
             quantidade = int(entry_quantidade.get())
             if update_stock(codigo, quantidade, "saida"):
                 messagebox.showinfo("Sucesso", "Saída registrada com sucesso!")
+                entry_quantidade.delete(0, tk.END)
         except ValueError:
             messagebox.showerror("Erro", "Quantidade deve ser um número inteiro!")
 
@@ -89,3 +102,16 @@ def controle_estoque(content_frame):
 
     btn_saida = tk.Button(content_frame, text="Registrar Saída", command=registrar_saida)
     btn_saida.pack(pady=5)
+
+    # Botão para atualizar os códigos no combobox
+    def atualizar_codigos():
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT codigo FROM componentes")
+        novos_codigos = [row[0] for row in cursor.fetchall()]
+        conn.close()
+        codigo_combo["values"] = novos_codigos
+        messagebox.showinfo("Atualizado", "Lista de códigos atualizada!")
+
+    btn_atualizar = tk.Button(content_frame, text="Atualizar Lista de Códigos", command=atualizar_codigos)
+    btn_atualizar.pack(pady=5)
