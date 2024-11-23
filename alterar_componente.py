@@ -7,8 +7,8 @@ def alterar_componente(content_frame):
     for widget in content_frame.winfo_children():
         widget.destroy()
 
-    title = tk.Label(content_frame, text="Alterar Componente", font=("Arial", 14))
-    title.pack(pady=10)
+    title = tk.Label(content_frame, text="Alterar Componente", font=("Arial", 14, "bold"), bg="#ffffff", fg="#4b6da1")
+    title.pack(pady=(10, 20))
 
     # Selecionar o componente pelo código
     frame_codigo = tk.Frame(content_frame)
